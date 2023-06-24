@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -33,11 +34,12 @@ namespace WebServer
                     break;
                 }
                 var httpRequestString = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                Console.WriteLine($"Http Request: {httpRequestString}");
+                
                 try
                 {
                     var httpRequestMessage = HttpHelper.CreateHttpRequestMessage(httpRequestString);
                     var httpResponseMessage = HttpHelper.CreateHttpResponseMessage(httpRequestMessage);
+                    Debug.Assert(httpResponseMessage.Content.Headers.ContentType != null);
                     var httpResponseMessageString = httpResponseMessage.ToHttpResponseMessageString();
                     var bytesToWrite = Encoding.UTF8.GetBytes(httpResponseMessageString);
                     socket.Send(bytesToWrite);

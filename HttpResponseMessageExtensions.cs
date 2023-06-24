@@ -16,7 +16,7 @@ namespace WebServer
             {
                 result.Append($"{headerKey}: {string.Join(", ", headerValue)}\r\n");
             }
-            // Content-Length
+            // Content-Headers
             foreach (var (headerKey, headerValue) in httpResponseMessage.Content.Headers)
             {
                 result.Append($"{headerKey}: {string.Join(", ", headerValue)}\r\n");
