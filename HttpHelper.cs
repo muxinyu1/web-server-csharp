@@ -7,35 +7,25 @@ namespace WebServer
     {
         public static HttpRequestMessage CreateHttpRequestMessage(string httpRequest)
         {
-            try
+            var lines = httpRequest.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var requestLine = lines[0].Split(' ');
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = new HttpMethod(requestLine[0]);
+            httpRequestMessage.RequestUri = new Uri(requestLine[1], UriKind.RelativeOrAbsolute);
+            httpRequestMessage.Version = new Version(requestLine[2][(requestLine[2].IndexOf('/') + 1)..]);
+
+            for (var i = 1; i < lines.Length; ++i)
             {
-
-
-                var lines = httpRequest.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                var requestLine = lines[0].Split(' ');
-
-                var httpRequestMessage = new HttpRequestMessage();
-                httpRequestMessage.Method = new HttpMethod(requestLine[0]);
-                httpRequestMessage.RequestUri = new Uri(requestLine[1], UriKind.RelativeOrAbsolute);
-                httpRequestMessage.Version = new Version(requestLine[2][(requestLine[2].IndexOf('/') + 1)..]);
-
-                for (var i = 1; i < lines.Length; ++i)
+                var header = lines[i].Split(':');
+                if (header.Length == 2)
                 {
-                    var header = lines[i].Split(':');
-                    if (header.Length == 2)
-                    {
-                        httpRequestMessage.Headers.TryAddWithoutValidation(header[0], header[1].Trim());
-                    }
+                    httpRequestMessage.Headers.TryAddWithoutValidation(header[0], header[1].Trim());
                 }
+            }
 
-                httpRequestMessage.Content = new StringContent(lines[^1]);
-                return httpRequestMessage;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            httpRequestMessage.Content = new StringContent(lines[^1]);
+            return httpRequestMessage;
         }
 
         public static HttpResponseMessage CreateHttpResponseMessage(HttpRequestMessage httpRequestMessage)
@@ -61,8 +51,9 @@ namespace WebServer
             }
 
             var mimeType = MimeMapping.MimeUtility.GetMimeMapping(path);
+            Console.WriteLine($"mimeType={mimeType}");
             httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
-            
+            Console.WriteLine(httpResponseMessage.Content.Headers.ContentType);
             var bytes = File.ReadAllBytes(path);
             httpResponseMessage.Content = new ByteArrayContent(bytes);
             httpResponseMessage.Content.Headers.ContentLength = bytes.Length;
@@ -74,12 +65,12 @@ namespace WebServer
 
             return httpResponseMessage;
         }
-        
+
         private static HttpResponseMessage CreateHttpResponseMessageFromPost(HttpRequestMessage httpRequestMessage)
         {
             return new HttpResponseMessage();
         }
-        
+
         private static HttpResponseMessage CreateHttpResponseMessageFromHead(HttpRequestMessage httpRequestMessage)
         {
             var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
@@ -90,7 +81,7 @@ namespace WebServer
                 path = "./webroot/404.html";
                 httpResponseMessage.StatusCode = HttpStatusCode.NotFound;
             }
-            
+
             var mimeType = MimeMapping.MimeUtility.GetMimeMapping(path);
             httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
 

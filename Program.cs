@@ -21,22 +21,26 @@ namespace WebServer
             }
         }
 
-        private static async void HandleClient(Socket socket)
+        private static void HandleClient(Socket socket)
         {
-            var stream = new NetworkStream(socket);
             var buffer = new byte[2048];
 
             while (true)
             {
-                var bytesRead = stream.Read(buffer);
+                var bytesRead = socket.Receive(buffer);
+                if (bytesRead == 0)
+                {
+                    break;
+                }
                 var httpRequestString = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 Console.WriteLine($"Http Request: {httpRequestString}");
                 try
                 {
                     var httpRequestMessage = HttpHelper.CreateHttpRequestMessage(httpRequestString);
                     var httpResponseMessage = HttpHelper.CreateHttpResponseMessage(httpRequestMessage);
-                    var bytesToWrite = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-                    stream.Write(bytesToWrite);
+                    var httpResponseMessageString = httpResponseMessage.ToHttpResponseMessageString();
+                    var bytesToWrite = Encoding.UTF8.GetBytes(httpResponseMessageString);
+                    socket.Send(bytesToWrite);
                     if (httpRequestMessage.Headers.ConnectionClose == true)
                     {
                         break;

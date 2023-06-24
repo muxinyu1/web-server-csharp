@@ -9,6 +9,9 @@
   
   <ItemGroup>
     <PackageReference Include="MimeMapping" Version="2.0.0" />
+    <Content Include="webroot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
