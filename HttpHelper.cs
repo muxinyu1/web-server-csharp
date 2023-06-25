@@ -104,9 +104,11 @@ namespace WebServer
         private static HttpResponseMessage CreateHttpResponseMessageFromPost(HttpRequestMessage httpRequestMessage)
         {
             var path = $".{httpRequestMessage.RequestUri!}";
+            Console.WriteLine($"path={path}");
             var stream = httpRequestMessage.Content!.ReadAsStream();
             var reader = new StreamReader(stream);
             var arguments = reader.ReadToEnd();
+            Console.WriteLine($"arg={arguments}");
             try
             {
                 return CallCgi(path, arguments);
@@ -124,8 +126,8 @@ namespace WebServer
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = path,
-                Arguments = arguments,
+                FileName = "python",
+                Arguments = $"{path} {arguments}",
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
@@ -133,7 +135,6 @@ namespace WebServer
             using var reader = process?.StandardOutput;
             var output = reader?.ReadToEnd()!;
             var bytes = Encoding.UTF8.GetBytes(output);
-
             var httpResponseMessage = new HttpResponseMessage();
             httpResponseMessage.StatusCode = HttpStatusCode.OK;
             httpResponseMessage.Content = new ByteArrayContent(bytes);
