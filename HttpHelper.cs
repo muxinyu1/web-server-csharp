@@ -64,7 +64,7 @@ namespace WebServer
         {
             var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
             var path = httpRequestMessage.RequestUri!.ToString();
-            path = path == "/" ? "./webroot/index.html" : "./webroot" + path;
+            path = path == "/" ? "./webroot/index.html" : "." + path;
             if (!File.Exists(path))
             {
                 path = "./webroot/404.html";
@@ -103,6 +103,9 @@ namespace WebServer
 
         private static HttpResponseMessage CreateHttpResponseMessageFromPost(HttpRequestMessage httpRequestMessage)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(httpRequestMessage.Content);
+            Console.ResetColor();
             var path = $".{httpRequestMessage.RequestUri!}";
             Console.WriteLine($"path={path}");
             var stream = httpRequestMessage.Content!.ReadAsStream();
@@ -127,7 +130,7 @@ namespace WebServer
             var startInfo = new ProcessStartInfo
             {
                 FileName = "python",
-                Arguments = $"{path} {arguments}",
+                Arguments = $"{path} {arguments}", // num1=10&num2=10
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
