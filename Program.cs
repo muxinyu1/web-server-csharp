@@ -34,7 +34,7 @@ namespace WebServer
                     break;
                 }
                 var httpRequestString = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                
+                // Console.WriteLine(httpRequestString);
                 try
                 {
                     var httpRequestMessage = HttpHelper.CreateHttpRequestMessage(httpRequestString);
