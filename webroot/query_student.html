@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Student</title>
+    <link rel="stylesheet" type="text/css" href="/webroot/style.css">
+    <script>
+        function validateForm() {
+            const studentId = document.getElementById("student_id").value;
+            if (studentId === "") {
+                alert("Student ID can not be empty");
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+<header>
+    <h1>Add Student</h1>
+</header>
+<nav>
+    <ul>
+        <li><a href="/webroot/index.html">Home</a></li>
+        <li><a href="/webroot/calculate.html">Calculate</a></li>
+        <li><a href="/webroot/add_student.html">Add Student</a></li>
+        <li><a href="/webroot/query_student.html">Query Student</a></li>
+    </ul>
+</nav>
+<main>
+    <form onsubmit="return validateForm()" method="post" action="/cgi-bin/query_student.py">
+        <label for="student_id">Student ID:</label>
+        <input type="text" id="student_id" name="student_id">
+        <button type="submit">Query</button>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2023 mxy</p>
+</footer>
+</body>
+</html>

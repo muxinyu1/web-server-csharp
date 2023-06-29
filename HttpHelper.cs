@@ -111,7 +111,7 @@ namespace WebServer
             var stream = httpRequestMessage.Content!.ReadAsStream();
             var reader = new StreamReader(stream);
             var arguments = reader.ReadToEnd();
-            Console.WriteLine($"arg={arguments}");
+            Console.WriteLine($"arg: {arguments}");
             try
             {
                 return CallCgi(path, arguments);
@@ -138,6 +138,9 @@ namespace WebServer
             using var reader = process?.StandardOutput;
             var output = reader?.ReadToEnd()!;
             var bytes = Encoding.UTF8.GetBytes(output);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(Encoding.UTF8.GetString(bytes));
+            Console.ResetColor();
             var httpResponseMessage = new HttpResponseMessage();
             httpResponseMessage.StatusCode = HttpStatusCode.OK;
             httpResponseMessage.Content = new ByteArrayContent(bytes);
