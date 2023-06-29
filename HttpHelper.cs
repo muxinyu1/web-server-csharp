@@ -129,7 +129,7 @@ namespace WebServer
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = "python",
+                FileName = "python3",
                 Arguments = $"{path} {arguments}", // num1=10&num2=10
                 RedirectStandardOutput = true,
                 UseShellExecute = false
