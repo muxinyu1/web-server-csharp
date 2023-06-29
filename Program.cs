@@ -8,7 +8,7 @@ namespace WebServer
     internal abstract class Program
     {
         private const int Max = 128;
-        public static void Main(string[] args)
+        public static void Main()
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888);
