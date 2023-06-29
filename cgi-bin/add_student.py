@@ -9,7 +9,7 @@ if form.getvalue('student_id') and form.getvalue('student_class') and form.getva
     student_class = str(form.getvalue('student_class'))
     student_name = str(form.getvalue('student_name'))
     try:
-        db = mysql.connector.connect(host='localhost', username='root', password='muxinyu1')
+        db = mysql.connector.connect(host='mysql', username='root', password='muxinyu1')
         cursor = db.cursor()
         cursor.execute('CREATE DATABASE IF NOT EXISTS student_db')
         cursor.execute('USE student_db')

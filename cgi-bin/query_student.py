@@ -7,7 +7,7 @@ form = cgi.FieldStorage()
 if form.getvalue('student_id'):
     student_id = form.getvalue('student_id')
     try:
-        db = mysql.connector.connect(host='localhost', database='student_db', username='root', password='muxinyu1')
+        db = mysql.connector.connect(host='mysql', database='student_db', username='root', password='muxinyu1')
         cursor = db.cursor()
         
         sql = 'SELECT * FROM student WHERE id = %s'
