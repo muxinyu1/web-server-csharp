@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/runtime:6.0
 
 RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
-    pip3 install -U pip setuptools \
+    pip3 install -U pip setuptools
 
 WORKDIR /app
 
