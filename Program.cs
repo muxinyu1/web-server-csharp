@@ -11,7 +11,7 @@ namespace WebServer
         public static void Main()
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888);
+            var endPoint = new IPEndPoint(IPAddress.Any, 8888);
             socket.Bind(endPoint);
             socket.Listen(Max);
             while (true)
