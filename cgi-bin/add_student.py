@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import cgi
 import mysql.connector
-import logging
+import json
 
 form = cgi.FieldStorage()
 if form.getvalue('student_id') and form.getvalue('student_class') and form.getvalue('student_name'):
@@ -24,7 +24,6 @@ if form.getvalue('student_id') and form.getvalue('student_class') and form.getva
         cursor.execute(sql, val)
 
         db.commit()
-
-        print("success: {}".format(cursor.lastrowid))
+        print(json.dumps({'success': True}))
     except Exception as e:
-        logging.exception(e)
+        print(json.dumps({'success': False}))
