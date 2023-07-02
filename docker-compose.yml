@@ -7,8 +7,8 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      - mysql
-  mysql:
+      - localhost
+  localhost:
     image: mysql
     ports:
       - "3306:3306"
