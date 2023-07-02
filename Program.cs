@@ -39,6 +39,10 @@ namespace WebServer
                 {
                     var httpRequestMessage = HttpHelper.CreateHttpRequestMessage(httpRequestString);
                     var httpResponseMessage = HttpHelper.CreateHttpResponseMessage(httpRequestMessage);
+                    
+                    // log
+                    Console.WriteLine(HttpHelper.MakeLog(httpRequestMessage, httpResponseMessage, socket));
+                    
                     Debug.Assert(httpResponseMessage.Content.Headers.ContentType != null);
                     var httpResponseMessageString = httpResponseMessage.ToHttpResponseMessageString();
                     var bytesToWrite = Encoding.UTF8.GetBytes(httpResponseMessageString);

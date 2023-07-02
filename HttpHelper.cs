@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Text;
 
 namespace WebServer
@@ -104,14 +105,14 @@ namespace WebServer
         private static HttpResponseMessage CreateHttpResponseMessageFromPost(HttpRequestMessage httpRequestMessage)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(httpRequestMessage.Content);
+            // Console.WriteLine(httpRequestMessage.Content);
             Console.ResetColor();
             var path = $".{httpRequestMessage.RequestUri!}";
-            Console.WriteLine($"path={path}");
+            // Console.WriteLine($"path={path}");
             var stream = httpRequestMessage.Content!.ReadAsStream();
             var reader = new StreamReader(stream);
             var arguments = reader.ReadToEnd();
-            Console.WriteLine($"arg: {arguments}");
+            // Console.WriteLine($"arg: {arguments}");
             try
             {
                 return CallCgi(path, arguments);
@@ -139,7 +140,7 @@ namespace WebServer
             var output = reader?.ReadToEnd()!;
             var bytes = Encoding.UTF8.GetBytes(output);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(Encoding.UTF8.GetString(bytes));
+            // Console.WriteLine(Encoding.UTF8.GetString(bytes));
             Console.ResetColor();
             var httpResponseMessage = new HttpResponseMessage();
             httpResponseMessage.StatusCode = HttpStatusCode.OK;
@@ -185,6 +186,35 @@ namespace WebServer
             }
 
             return httpResponseMessage;
+        }
+
+        public static string MakeLog(HttpRequestMessage httpRequestMessage, HttpResponseMessage httpResponseMessage,
+            Socket socket)
+        {
+            var builder = new StringBuilder();
+            builder.Append(((IPEndPoint?)socket.RemoteEndPoint)?.Address);
+            builder.Append("--");
+            builder.Append($"[{Time}]");
+            builder.Append(
+                $"\"{httpRequestMessage.Method.Method} {httpRequestMessage.RequestUri} HTTP/{httpRequestMessage.Version.Major}.{httpResponseMessage.Version.Minor}\"");
+            builder.Append(
+                $"{(int)httpResponseMessage.StatusCode} {httpResponseMessage.Content.Headers.ContentLength}");
+            if (httpRequestMessage.Headers.Referrer != null)
+            {
+                builder.Append($"\"{httpRequestMessage.Headers.Referrer}\"");
+            }
+            builder.Append($"\"{httpRequestMessage.Headers.UserAgent}\"");
+            return builder.ToString();
+        }
+
+        private static string Time
+        {
+            get
+            {
+                const string outputFormat = "dd/MMM/yyyy:HH:mm:ss zzz";
+                var currentDateTimeOffset = DateTimeOffset.Now;
+                return currentDateTimeOffset.ToString(outputFormat);
+            }
         }
     }
 }
