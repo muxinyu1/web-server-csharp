@@ -223,6 +223,7 @@ namespace WebServer
             {
                 builder.Append($"\"{httpRequestMessage.Headers.Referrer}\"");
             }
+
             builder.Append($"\"{httpRequestMessage.Headers.UserAgent}\"");
             return builder.ToString();
         }

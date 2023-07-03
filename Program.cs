@@ -8,6 +8,7 @@ namespace WebServer
     internal abstract class Program
     {
         private const int Max = 128;
+
         public static void Main()
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -33,16 +34,17 @@ namespace WebServer
                 {
                     break;
                 }
+
                 var httpRequestString = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 // Console.WriteLine(httpRequestString);
                 try
                 {
                     var httpRequestMessage = HttpHelper.CreateHttpRequestMessage(httpRequestString);
                     var httpResponseMessage = HttpHelper.CreateHttpResponseMessage(httpRequestMessage);
-                    
+
                     // log
                     Console.WriteLine(HttpHelper.MakeLog(httpRequestMessage, httpResponseMessage, socket));
-                    
+
                     Debug.Assert(httpResponseMessage.Content.Headers.ContentType != null);
                     var httpResponseMessageString = httpResponseMessage.ToHttpResponseMessageString();
                     var bytesToWrite = Encoding.UTF8.GetBytes(httpResponseMessageString);

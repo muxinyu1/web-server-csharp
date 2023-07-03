@@ -2,7 +2,6 @@ using System.Text;
 
 namespace WebServer
 {
-
     internal static class HttpResponseMessageExtensions
     {
         /// <summary>
@@ -21,12 +20,13 @@ namespace WebServer
             {
                 result.Append($"{headerKey}: {string.Join(", ", headerValue)}\r\n");
             }
+
             // Content-Headers
             foreach (var (headerKey, headerValue) in httpResponseMessage.Content.Headers)
             {
                 result.Append($"{headerKey}: {string.Join(", ", headerValue)}\r\n");
-                
             }
+
             // 头部结束
             result.Append("\r\n");
             // 响应体
