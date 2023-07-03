@@ -8,8 +8,12 @@ namespace WebServer
     internal abstract class Program
     {
         private const int Max = 128;
+
         public static void Main()
         {
+            // Init Log
+            var file = File.Open("log", FileMode.Create);
+            file.Close();
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var endPoint = new IPEndPoint(IPAddress.Any, 8888);
             socket.Bind(endPoint);
@@ -41,7 +45,9 @@ namespace WebServer
                     var httpResponseMessage = HttpHelper.CreateHttpResponseMessage(httpRequestMessage);
                     
                     // log
-                    Console.WriteLine(HttpHelper.MakeLog(httpRequestMessage, httpResponseMessage, socket));
+                    using var writer = new StreamWriter(new FileStream("log", FileMode.Append));
+                    writer.WriteLine(HttpHelper.MakeLog(httpRequestMessage, httpResponseMessage, socket));
+                    // Console.WriteLine(HttpHelper.MakeLog(httpRequestMessage, httpResponseMessage, socket));
                     
                     Debug.Assert(httpResponseMessage.Content.Headers.ContentType != null);
                     var httpResponseMessageString = httpResponseMessage.ToHttpResponseMessageString();
@@ -60,5 +66,6 @@ namespace WebServer
 
             socket.Close();
         }
+
     }
 }
