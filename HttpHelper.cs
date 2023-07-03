@@ -8,6 +8,9 @@ namespace WebServer
 {
     internal abstract class HttpHelper
     {
+        /// <summary>
+        /// 表示404 Not Found的 Http响应报文
+        /// </summary>
         private static HttpResponseMessage NotFound
         {
             get
@@ -24,6 +27,11 @@ namespace WebServer
             }
         }
 
+        /// <summary>
+        /// 将表示Http请求报文的字符串转为Http请求对象
+        /// </summary>
+        /// <param name="httpRequest">Http请求报文字符串</param>
+        /// <returns></returns>
         public static HttpRequestMessage CreateHttpRequestMessage(string httpRequest)
         {
             var lines = httpRequest.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -50,6 +58,11 @@ namespace WebServer
             return httpRequestMessage;
         }
 
+        /// <summary>
+        /// 根据Http请求对象创建对应的Http响应对象
+        /// </summary>
+        /// <param name="httpRequestMessage">Http请求对象</param>
+        /// <returns></returns>
         public static HttpResponseMessage CreateHttpResponseMessage(HttpRequestMessage httpRequestMessage)
         {
             return httpRequestMessage.Method.Method switch
@@ -188,6 +201,13 @@ namespace WebServer
             return httpResponseMessage;
         }
 
+        /// <summary>
+        /// 创建一次请求-响应对应的Log的一行
+        /// </summary>
+        /// <param name="httpRequestMessage">本次处理的请求</param>
+        /// <param name="httpResponseMessage">本次处理的响应</param>
+        /// <param name="socket">Tcp套接字</param>
+        /// <returns></returns>
         public static string MakeLog(HttpRequestMessage httpRequestMessage, HttpResponseMessage httpResponseMessage,
             Socket socket)
         {
@@ -207,6 +227,9 @@ namespace WebServer
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 按照指定格式得到系统时间
+        /// </summary>
         private static string Time
         {
             get

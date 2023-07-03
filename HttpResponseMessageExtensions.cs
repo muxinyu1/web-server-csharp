@@ -5,6 +5,11 @@ namespace WebServer
 
     internal static class HttpResponseMessageExtensions
     {
+        /// <summary>
+        /// 将Http响应报文转为字符串便于发送和调试
+        /// </summary>
+        /// <param name="httpResponseMessage">Http响应报文对象</param>
+        /// <returns></returns>
         public static string ToHttpResponseMessageString(this HttpResponseMessage httpResponseMessage)
         {
             var result = new StringBuilder();
